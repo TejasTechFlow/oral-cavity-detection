@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oral Cavity Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="hero">
+    <h1>Oral Cavity Detection</h1>
+    <p>Upload an intra-oral photo to locate the oral cavity and highlight suspicious regions.</p>
+  </header>
+  <main class="card">
+    {% with messages = get_flashed_messages() %}
+      {% for m in messages %}<div class="alert">{{ m }}</div>{% endfor %}
+    {% endwith %}
+    <form id="upload-form" action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
+      <label id="dropzone" class="dropzone" for="image">
+        <div id="placeholder">
+          <div class="icon">&#128444;</div>
+          <strong>Drag &amp; drop an image</strong>
+          <span>or click to browse (JPG, PNG, BMP, WEBP &middot; max 10 MB)</span>
+        </div>
+        <img id="preview" alt="Preview" hidden>
+        <input type="file" id="image" name="image" accept="image/*" hidden>
+      </label>
+      <p id="file-error" class="error" hidden></p>
+      <button type="submit" id="submit-btn" class="btn" disabled>Run Detection</button>
+    </form>
+    <p class="disclaimer">Educational screening demo only &mdash; not a medical diagnosis. Consult a dentist or doctor.</p>
+  </main>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

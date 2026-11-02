@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Result &middot; Oral Cavity Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="hero"><h1>Detection Result</h1>
+    <p>Mode: {{ result.mode }} &middot; {{ result.findings }} suspicious region(s) flagged</p></header>
+  <main class="card wide">
+    <div class="compare">
+      <figure><img src="{{ url_for('uploads', filename=original) }}" alt="Original"><figcaption>Original</figcaption></figure>
+      <figure><img src="{{ url_for('res_img', filename=result.result_image) }}?t={{ stamp }}" alt="Result"><figcaption>Detected</figcaption></figure>
+    </div>
+    {% if result.detections %}
+    <table>
+      <thead><tr><th>#</th><th>Label</th><th>Confidence</th><th>Box (x1,y1,x2,y2)</th></tr></thead>
+      <tbody>
+      {% for d in result.detections %}
+        <tr><td>{{ loop.index }}</td><td><span class="tag {{ d.label|lower|replace(' ','-') }}">{{ d.label }}</span></td>
+          <td>{% if d.confidence is not none %}{{ '%.0f%%'|format(d.confidence*100) }}{% else %}&mdash;{% endif %}</td>
+          <td>{{ d.box|join(', ') }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <div class="alert">No oral cavity detected. Try a clearer, well-lit, close-up photo of the open mouth.</div>
+    {% endif %}
+    <a class="btn" href="{{ url_for('index') }}">Analyse another image</a>
+    <p class="disclaimer">Educational screening demo only &mdash; not a medical diagnosis.</p>
+  </main>
+</body>
+</html>
